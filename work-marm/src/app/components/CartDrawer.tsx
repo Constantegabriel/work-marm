@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import ReactDOM from "react-dom"; // Importa ReactDOM para Portals
 import { useCart } from "../context/CartContext"; // Ajuste o caminho para o contexto do carrinho
 import { FaRegTrashAlt } from "react-icons/fa";
+import Image from "next/image"; // Importa o componente Image do Next.js
 
 type CartDrawerProps = {
   isOpen: boolean;
@@ -91,10 +92,12 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
                   className="flex items-center justify-between bg-gray-100 p-4 rounded-lg shadow"
                 >
                   <div className="flex items-center space-x-4">
-                    <img
+                    <Image
                       src={item.image}
                       alt={item.title}
-                      className="w-20 h-20 object-cover rounded-lg"
+                      width={80}
+                      height={80}
+                      className="rounded-lg object-cover"
                     />
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800">
