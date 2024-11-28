@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  const hashedPassword = await bcrypt.hash("senha321", 10); // Substitua "senhaSuperSecreta" pela senha desejada
+  const hashedPassword = await bcrypt.hash("senha123", 10); // Substitua "senhaSuperSecreta" pela senha desejada
 
   await prisma.user.create({
     data: {

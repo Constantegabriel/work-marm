@@ -20,11 +20,12 @@ model User {
 model Ad {
   id          Int        @id @default(autoincrement())
   title       String
-  description String?
   price       Float
+  description String?
   imageUrl    String
   createdAt   DateTime   @default(now())
-  cartItems   CartItem[] // Relação com CartItem
+  updatedAt   DateTime   @default(now()) // Valor padrão
+  cartItems   CartItem[] // Relacionamento inverso com CartItem
 }
 
 model Cart {

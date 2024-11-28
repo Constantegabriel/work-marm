@@ -36,8 +36,8 @@ const handler = NextAuth({
           throw new Error("Senha incorreta.");
         }
 
-        // Retorna informações do usuário para a sessão
-        return { id: user.id, email: user.email, name: user.name };
+        // Retorna informações do usuário com o ID convertido para string
+        return { id: user.id.toString(), email: user.email, name: user.name };
       },
     }),
   ],
@@ -47,7 +47,7 @@ const handler = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
+        token.id = user.id.toString(); // Garante que o ID é uma string
         token.email = user.email;
         token.name = user.name;
       }
@@ -56,9 +56,9 @@ const handler = NextAuth({
     async session({ session, token }) {
       if (token) {
         session.user = {
-          id: token.id,
-          email: token.email,
-          name: token.name,
+          id: String(token.id), // Converte explicitamente para string
+          email: token.email as string,
+          name: token.name as string,
         };
       }
       return session;

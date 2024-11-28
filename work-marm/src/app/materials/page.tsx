@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
-import { useCart } from "../context/CartContext"; // Certifique-se de ajustar o caminho para o contexto do carrinho
-import Image from "next/image"; // Importa o componente Image do Next.js
+import { useCart } from "../context/CartContext"; 
+import Image from "next/image"; 
 
 interface Material {
   id: number;
@@ -16,7 +16,7 @@ interface Material {
 export default function MaterialsPage() {
   const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(true);
-  const { addToCart } = useCart(); // Hook do contexto para adicionar ao carrinho
+  const { addToCart } = useCart(); 
 
   useEffect(() => {
     const fetchMaterials = async () => {
@@ -45,7 +45,7 @@ export default function MaterialsPage() {
       {materials.length === 0 ? (
         <p className="text-gray-500">Nenhum material encontrado.</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {materials.map((material) => (
             <div
               key={material.id}
@@ -61,8 +61,8 @@ export default function MaterialsPage() {
                 />
               </div>
               <h2 className="text-lg font-semibold">{material.title}</h2>
-              <p className="text-gray-600">Preço: R$ {material.price.toFixed(2)}</p>
-              <p className="text-gray-500 text-sm">{material.description}</p>
+              <p className="text-gray-600">Preço por M²: R$ {material.price.toFixed(2)}</p>
+              <p className="text-gray-500 w-[100%] text-sm">{material.description}</p>
 
               {/* Botão para adicionar ao carrinho */}
               <button
@@ -71,8 +71,7 @@ export default function MaterialsPage() {
                     id: material.id,
                     title: material.title,
                     price: material.price,
-                    image: material.imageUrl,
-                    quantity: 1, // Certifique-se de definir um valor padrão de quantidade
+                    image: material.imageUrl, // Sem passar explicitamente `quantity`
                   })
                 }
                 className="mt-4 text-[28px] text-black px-4 py-2 rounded-lg transition"

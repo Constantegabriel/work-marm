@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import company from "../../../public/img/quarto.jpg";
 
 export default function Empresa() {
   return (
@@ -63,10 +66,10 @@ export default function Empresa() {
       <div className="mt-12">
         <div className="w-full h-80 relative">
           <Image
-            src="/img/company.jpg"
+            src={company}
             alt="Imagem da empresa"
-            layout="fill"
-            objectFit="cover"
+            fill
+            style={{ objectFit: "cover" }}
             className="rounded-lg shadow-lg"
           />
         </div>

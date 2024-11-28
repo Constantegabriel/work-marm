@@ -1,12 +1,13 @@
 "use client";
 
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 
 interface CartItem {
   id: number;
   title: string;
   price: number;
   image: string;
+  description?: string; // Adicionada a propriedade `description`
   quantity: number; // Quantidade do item no carrinho
 }
 
@@ -20,7 +21,19 @@ interface CartContextType {
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [cart, setCart] = useState<CartItem[]>([]);
+  // Inicializa o estado do carrinho a partir do localStorage
+  const [cart, setCart] = useState<CartItem[]>(() => {
+    if (typeof window !== "undefined") {
+      const storedCart = localStorage.getItem("cart");
+      return storedCart ? JSON.parse(storedCart) : [];
+    }
+    return [];
+  });
+
+  // Salva o carrinho no localStorage sempre que ele for atualizado
+  useEffect(() => {
+    localStorage.setItem("cart", JSON.stringify(cart));
+  }, [cart]);
 
   // Adiciona produto ao carrinho
   const addToCart = (item: Omit<CartItem, "quantity">) => {

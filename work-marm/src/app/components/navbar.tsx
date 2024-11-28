@@ -14,7 +14,10 @@ export default function Navbar() {
   const { cart } = useCart(); // Obtém o carrinho do contexto
 
   // Calcula a quantidade total de itens no carrinho
-  const totalItems = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const totalItems = cart?.reduce((acc, item) => acc + item.quantity, 0) || 0;
+
+
+  
 
   return (
     <nav className="bg-gray-900 bg-opacity-60 backdrop-blur-md fixed top-0 z-[900] w-full text-white px-6 py-6">

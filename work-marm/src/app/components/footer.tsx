@@ -1,14 +1,16 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../public/img/logo_marmo.png";
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-800 text-white py-12">
+    <footer className="bg-gray-800 text-white py-14">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 px-12">
         {/* Informações da empresa */}
         <div className="mt-[20px]">
-          <div className="w-[100px]">
+          <div className="w-[80px]">
             <Link href="/" className="flex items-center">
               <Image
                 src={logo}
@@ -31,9 +33,9 @@ export default function Footer() {
         <div>
           <h1 className="text-lg font-bold">ONDE NOS ENCONTRAR</h1>
           <p className="text-sm mt-4 leading-relaxed">
-            Rua 123, 1234 - Centro, Florianópolis, Santa Catarina, 88000-000
+          R. Gregório Flôr, 170 - Rio Caveiras, Biguaçu - SC, 88161-780
           </p>
-          <p className="text-sm mt-2">CEP: 00000-000</p>
+          <p className="text-sm mt-2">CEP: 88161-780</p>
         </div>
 
         {/* Contato */}
@@ -57,6 +59,8 @@ export default function Footer() {
           </Link>
         </h1>
       </div>
+
+      
     </footer>
   );
 }

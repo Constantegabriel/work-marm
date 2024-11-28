@@ -6,3 +6,10 @@
   --background: #ffffff;
   --foreground: #171717;
 }
+
+/* Força o modal e overlay a ficarem acima de todos os elementos */
+.modal-overlay,
+.modal-drawer {
+  z-index: 99999 !important;
+  position: fixed;
+}

@@ -2,9 +2,8 @@
 
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useState } from "react";
-import Image from "next/image"; // Importa o componente Image do Next.js
+import Image from "next/image";
 
-// Definição de interface para material
 interface Material {
   id: number;
   title: string;
@@ -15,100 +14,90 @@ interface Material {
 
 export default function AdminDashboard() {
   const { data: session, status } = useSession();
-  const [materials, setMaterials] = useState<Material[]>([]); // Define o tipo como Material[]
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   const [title, setTitle] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
-  const [image, setImage] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
 
   // Redireciona para login se o usuário não estiver autenticado
   useEffect(() => {
-    if (status === "unauthenticated") {
+    if (status === "unauthenticated" && typeof window !== "undefined") {
       window.location.href = "/admin";
     }
   }, [status]);
 
+  // Busca os materiais disponíveis
   useEffect(() => {
     fetchMaterials();
   }, []);
 
-  // Função para buscar materiais
-  const fetchMaterials = async (): Promise<void> => {
+  const fetchMaterials = async () => {
     try {
       setLoading(true);
       const res = await fetch("/api/materials");
       if (!res.ok) throw new Error("Erro ao carregar materiais.");
-      const data: Material[] = await res.json(); // Define o tipo dos dados recebidos
+      const data: Material[] = await res.json();
       setMaterials(data);
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("Erro ao carregar materiais.");
-      }
+      setError(null); // Limpa qualquer erro anterior
+    } catch (err) {
+      console.error("Erro ao carregar materiais:", err);
+      setError("Erro ao carregar materiais.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Função para excluir material
-  const handleDelete = async (id: number): Promise<void> => {
-    const confirmDelete = confirm("Tem certeza que deseja excluir este material?");
-    if (!confirmDelete) return;
+  const handleDelete = async (id: number) => {
+    if (!confirm("Tem certeza que deseja excluir este material?")) return;
 
     try {
       setLoading(true);
       const res = await fetch(`/api/materials/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error("Erro ao excluir material.");
       alert("Material excluído com sucesso!");
-      fetchMaterials(); // Atualiza a lista de materiais após exclusão
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        alert(err.message);
-      } else {
-        alert("Erro inesperado ao excluir o material.");
-      }
+      fetchMaterials();
+    } catch (err) {
+      console.error("Erro ao excluir material:", err);
+      alert("Erro ao excluir material.");
     } finally {
       setLoading(false);
     }
   };
 
-  // Função para adicionar material
-  const handleAddMaterial = async (e: React.FormEvent): Promise<void> => {
+  const handleAddMaterial = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!title || !price || !image) {
+    if (!title || !price || !imageFile) {
       alert("Preencha todos os campos obrigatórios.");
       return;
     }
 
     try {
       setLoading(true);
+
+      const formData = new FormData();
+      formData.append("title", title);
+      formData.append("price", price);
+      formData.append("description", description || "");
+      formData.append("image", imageFile);
+
       const res = await fetch("/api/materials", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title,
-          price: parseFloat(price),
-          description,
-          image,
-        }),
+        body: formData,
       });
       if (!res.ok) throw new Error("Erro ao adicionar material.");
       alert("Material adicionado com sucesso!");
       setTitle("");
       setPrice("");
       setDescription("");
-      setImage("");
-      fetchMaterials(); // Atualiza a lista de materiais após adição
-    } catch (err: unknown) {
-      if (err instanceof Error) {
-        alert(err.message);
-      } else {
-        alert("Erro inesperado ao adicionar material.");
-      }
+      setImageFile(null);
+      fetchMaterials();
+    } catch (err) {
+      console.error("Erro ao adicionar material:", err);
+      alert("Erro ao adicionar material.");
     } finally {
       setLoading(false);
     }
@@ -150,10 +139,9 @@ export default function AdminDashboard() {
           className="border p-2 w-full"
         ></textarea>
         <input
-          type="text"
-          placeholder="URL da Imagem"
-          value={image}
-          onChange={(e) => setImage(e.target.value)}
+          type="file"
+          accept="image/*"
+          onChange={(e) => setImageFile(e.target.files?.[0] || null)}
           className="border p-2 w-full"
         />
         <button
@@ -180,7 +168,7 @@ export default function AdminDashboard() {
                 src={material.imageUrl}
                 alt={material.title}
                 width={300}
-                height={160}
+                height={200}
                 className="w-full h-40 object-cover mb-4 rounded"
               />
               <h2 className="text-lg font-semibold">{material.title}</h2>

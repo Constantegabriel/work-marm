@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ReactDOM from "react-dom"; // Importa ReactDOM para Portals
 import { useCart } from "../context/CartContext"; // Ajuste o caminho para o contexto do carrinho
 import { FaRegTrashAlt } from "react-icons/fa";
@@ -13,6 +13,12 @@ type CartDrawerProps = {
 
 export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
   const { cart, removeFromCart } = useCart();
+  const [isClient, setIsClient] = useState(false);
+
+  // Garante que este código seja executado apenas no cliente
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Bloqueia a rolagem quando o modal estiver aberto
   useEffect(() => {
@@ -133,6 +139,9 @@ export default function CartDrawer({ isOpen, onClose }: CartDrawerProps) {
       </div>
     </>
   );
+
+  // Garante que o portal seja renderizado apenas no cliente
+  if (!isClient) return null;
 
   // Usa React Portals para renderizar o modal no body
   return ReactDOM.createPortal(modalContent, document.body);
